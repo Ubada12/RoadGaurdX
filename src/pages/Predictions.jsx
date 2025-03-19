@@ -507,7 +507,7 @@ const FloodPredictionDashboard = () => {
               </div>
   
               <div className="mt-6 p-4 bg-gray-100 rounded-lg shadow-md text-center">
-    <p className="text-2xl font-bold text-blue-600">📍 City: {address?.city}</p>
+    <p className="text-2xl font-bold text-blue-600">📍 Place: {address?.city}</p>
     <p className="text-xl text-gray-800 mt-2">🏠 Address: {address?.location}</p>
   </div>
   
