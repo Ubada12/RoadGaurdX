@@ -162,7 +162,7 @@ const FloodPredictionDashboard = () => {
     setStreaming(!streaming);
     if (streaming) {
       fetchData();
-      intervalRef.current = setInterval(fetchData, 20000);
+      intervalRef.current = setInterval(fetchData, 12000);
     } else {
       clearInterval(intervalRef.current);
     }
