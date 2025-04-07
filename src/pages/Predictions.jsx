@@ -162,7 +162,7 @@ const FloodPredictionDashboard = () => {
     setStreaming(!streaming);
     if (streaming) {
       fetchData();
-      intervalRef.current = setInterval(fetchData, 12000);
+      intervalRef.current = setInterval(fetchData, 10000);
     } else {
       clearInterval(intervalRef.current);
     }
@@ -257,12 +257,16 @@ const FloodPredictionDashboard = () => {
         });
 
         const data = predictionResponse.data;
+        const confidence = data.prediction.confidence;
+        const roadRiskLabel = data.prediction.label;
+        const hazardProbability = 1 - confidence;
         setPrediction({
-          floodRisk: data.prediction.road_risk,
-        reason: data.prediction.reason,
-        drainBlockageProb: data.prediction.hazard_probability,
-          prediction: data.prediction.prediction,
-        });
+           floodRisk: roadRiskLabel,
+           reason: roadRiskLabel === "High Risk Road"
+                   ? "Detected risk factors from road surface"
+                   : "No major risk detected — appears safe",
+          drainBlockageProb: Math.round(hazardProbability * 10000) / 100, // ✅ Now shows 49.69%
+         });
 
         setWeather({
           temp: data.weather_data.temp,
@@ -464,13 +468,9 @@ const FloodPredictionDashboard = () => {
           {prediction && (
             <motion.div 
             className={`mt-6 p-6 rounded-lg shadow-md ${
-              prediction.prediction === "✅ Road is Safe"
-                ? "bg-green-100"
-                : prediction.prediction === "🚧 Severe Road Hazard" || prediction.drainBlockage === "❌ Road Blocked"
+              prediction.floodRisk === "High Risk Road"
                 ? "bg-red-100"
-                : prediction.prediction === "⚠️ Potential Road Hazard Detected" || prediction.prediction === "🔄 Under Maintenance"
-                ? "bg-yellow-100"
-                : ""
+                : "bg-green-100"
             }`}
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
